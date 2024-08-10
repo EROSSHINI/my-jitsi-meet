@@ -1,0 +1,43 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import Video from './Video';
+import { setVideoMuted } from '../actions';
+
+class VideoDisplay extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            videoMuted: false,
+        };
+    }
+
+    toggleVideo = () => {
+        const { videoMuted } = this.state;
+        this.setState({ videoMuted: !videoMuted });
+        this.props.setVideoMuted(!videoMuted);
+    }
+
+    render() {
+        const { videoMuted } = this.state;
+        const { videoStream } = this.props;
+
+        return (
+            <div className="video-display">
+                <Video stream={videoStream} muted={videoMuted} />
+                <button onClick={this.toggleVideo}>
+                    {videoMuted ? 'Unmute Video' : 'Mute Video'}
+                </button>
+            </div>
+        );
+    }
+}
+
+const mapStateToProps = (state) => ({
+    videoStream: state.media.videoStream,
+});
+
+const mapDispatchToProps = {
+    setVideoMuted,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(VideoDisplay);
